@@ -1,4 +1,4 @@
-# \[Group name\]
+# \[Oliver Niklas Philipp\]
 
 **Group members:**
 - Oliver

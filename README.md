@@ -1,9 +1,11 @@
 # \[Oliver Niklas Philipp\]
 
 **Group members:**
-- Oliver
+- Olivers
 - Niklas
 - Philipp
+
+
 
 This repository contains  
 1. Inaugural project. 

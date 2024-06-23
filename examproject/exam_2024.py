@@ -217,4 +217,3 @@ class EconomicsModel:
         utility = self.consumer_utility(c1_star, c2_star, self.par.alpha, self.par.nu, ell_star, self.par.epsilon)
         swf = utility - self.par.kappa * equilibrium_results['y2_star']
         return -swf  
-

@@ -1,11 +1,11 @@
-# Readme - Portfolio: Niklas, Oliver, Philipp
+# Readme - Portfolio
 
-## Group members:
-- Niklas
-- Olivers
+## Group members
+- Niklas Habermann Andersen
+- Olivers Alexander Kolansky Vogler Dam
 - Philipp Heyna
 
-## Contents
+## Projects
 
 ### Inaugural project
 

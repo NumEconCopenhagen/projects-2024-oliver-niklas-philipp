@@ -1,0 +1,534 @@
+# Problem 2: Philipp Heyna
+
+I have included the prompts that have generated substantial pieces of code for answering question 2 below. The documentation has the following structure:
+
+############
+## Prompt Example: ChatGPT 4
+############
+
+---
+Prompt 1
+...
+If any: subsequent prompt 1.1
+...
+If any: subsequent prompt 1.2
+---
+Final answer (code)
+---
+
+############
+## Prompt 1: ChatGPT 4
+############
+
+---
+utility_1 = []
+utility_2 = []
+utility_3 = []
+
+for error in e:
+v_1 = 1
+utility_1.append(v_1 + error)
+
+for error in e:
+v_2 = 2
+utility_2.append(v_2 + error)
+
+for error in e:
+v_3 = 3
+utility_3.append(v_3 + error)
+
+how to make this in one loop using par.v = np.array([1,2,3])?
+---
+# Assuming par.sigma and par.K are defined and e is already generated
+# Also assuming par.v is defined as follows:
+par.v = np.array([1, 2, 3])
+
+# Initialize a list of lists to store utility values for each v
+utilities = [[] for _ in par.v]
+
+# Process each error in a single loop
+for error in e:
+    for i, v in enumerate(par.v):
+        utilities[i].append(v + error)
+
+# Now utilities[0], utilities[1], and utilities[2] correspond to utility_1, utility_2, and utility_3 respectively
+
+# Calculate the means and round them
+mean_utilities = [round(np.mean(utility), 3) for utility in utilities]
+
+print("Mean utilities:", mean_utilities)
+---
+
+############
+## Prompt 2: ChatGPT 4
+############
+
+---
+These are my parameters:
+
+par = SimpleNamespace()
+par.J = 3
+par.N = 10
+par.K = 10000
+
+par.F = np.arange(1,par.N+1)
+par.sigma = 2
+
+par.v = np.array([1,2,3])
+par.c = 1
+
+This is my code for a simulation of career track payoffs for career tracks J defined by the values par.v.
+
+# Setting the seed for reproducibility of the error term, calculating the error terms using the parameters above
+np.random.seed(1703)
+E = np.random.normal(0, par.sigma, par.K)
+
+# Initialize a list of lists to store utility values for each v
+utilities = [[] for _ in par.v]
+
+# Calculating utilities for each value of v
+for e in E:
+    for i, v in enumerate(par.v):
+        utilities[i].append(v + e)
+
+# Calculate the means and round them
+mean_utilities = [round(np.mean(utility), 3) for utility in utilities]
+
+Now, I need to augment this using friends' utilities (F). There are 10 graduates, the first graduate has one friend in each career, the second two in each career, and so on until ten. Utilities now reflect the reported payoffs from these friends for each graduate. So the tenth graduate should be able to draw on one simulation for each of the ten friends among each of three career paths. How would you approach this, drawing on the code above? The output should reflect a matrix of payoffs for each of the friend of each graduate in each career path.
+---
+import numpy as np
+from types import SimpleNamespace
+
+# Setting up the simulation parameters
+par = SimpleNamespace()
+par.J = 3  # Number of career paths
+par.N = 10  # Number of graduates
+par.K = 10000  # Number of simulations
+par.sigma = 2  # Standard deviation of noise
+par.F = np.arange(1, par.N + 1)  # Number of friends per graduate (1 to N)
+par.v = np.array([1, 2, 3])  # Intrinsic values of each career path
+
+# Seed for reproducibility
+np.random.seed(1703)
+
+# Initialize a list to store utility values for each graduate and their friends
+graduate_friend_utilities = []
+
+# Simulate utilities for each graduate's friends
+for i in range(par.N):  # For each graduate
+    friends_utilities = []  # List to hold utilities for all friends of graduate i
+    for f in range(par.F[i]):  # For each friend of graduate i
+        # Simulate utilities from normal distribution centered on par.v with noise par.sigma
+        utilities = np.random.normal(par.v, par.sigma, par.J)
+        # Append the simulated utilities to the friends' list
+        friends_utilities.append(utilities)
+    # Append the friends' utilities list to the main list
+    graduate_friend_utilities.append(friends_utilities)
+
+# Print structured data
+for i, friends_utilities in enumerate(graduate_friend_utilities):
+    print(f"Graduate {i + 1} with {par.F[i]} friends' utilities:")
+    for f, utilities in enumerate(friends_utilities):
+        print(f"  Friend {f + 1}: {utilities}")
+
+# Calculate mean utilities across friends for each graduate if needed
+mean_utilities = [np.mean(friend_utilities, axis=0) for friend_utilities in graduate_friend_utilities]
+
+# Print the means for verification
+for i, utilities in enumerate(mean_utilities):
+    print(f"Mean utilities for Graduate {i+1}: {utilities.round(3)}")
+
+---
+
+############
+## Prompt 3: ChatGPT 4o
+############
+
+---
+From mean_utilities, only retain the maximum values each and print which one would be choosen by the graduate from these expected utilities. Print the number of the column and the expected utilities.
+---
+import numpy as np
+from types import SimpleNamespace
+
+# Setting up the simulation parameters
+par = SimpleNamespace()
+par.J = 3  # Number of career paths
+par.N = 10  # Number of graduates
+par.K = 10000  # Number of simulations
+par.sigma = 2  # Standard deviation of noise
+par.F = np.arange(1, par.N + 1)  # Number of friends per graduate (1 to N)
+par.v = np.array([1, 2, 3])  # Intrinsic values of each career path
+
+# Seed for reproducibility
+np.random.seed(1703)
+
+# Initialize a list to store utility values for each graduate and their friends
+graduate_friend_utilities = []
+
+# Simulate utilities for each graduate's friends
+for i in range(par.N):  # For each graduate
+    friends_utilities = []  # List to hold utilities for all friends of graduate i
+    for f in range(par.F[i]):  # For each friend of graduate i
+        # Simulate utilities from normal distribution centered on par.v with noise par.sigma
+        utilities = np.random.normal(par.v, par.sigma, par.J)
+        # Append the simulated utilities to the friends' list
+        friends_utilities.append(utilities)
+    # Append the friends' utilities list to the main list
+    graduate_friend_utilities.append(friends_utilities)
+
+# Calculate mean utilities across friends for each graduate
+mean_utilities = [np.mean(friend_utilities, axis=0) for friend_utilities in graduate_friend_utilities]
+
+# Determine the maximum utility and corresponding career path for each graduate
+chosen_careers = []
+for i, utilities in enumerate(mean_utilities):
+    max_index = np.argmax(utilities)
+    chosen_careers.append((max_index, utilities[max_index]))
+
+# Print the chosen career paths and their expected utilities
+for i, (career_index, utility) in enumerate(chosen_careers):
+    print(f"Graduate {i + 1} would choose Career Path {career_index + 1} with an expected utility of {utility:.3f}")
+
+# Print the mean utilities for verification
+for i, utilities in enumerate(mean_utilities):
+    print(f"Mean utilities for Graduate {i + 1}: {utilities.round(3)}")
+---
+
+############
+## Prompt 4: ChatGPT 4o
+############
+
+---
+What is the most efficient way to simulate this 10000 times?
+
+# Setting the seed for reproducibility of the error term, calculating the error terms using the parameters above
+np.random.seed(1703)
+
+# Initialize a list to store utility values for each graduate and their friends
+graduate_friend_utilities = []
+
+# Simulate utilities for each graduate's friends
+for i in range(par.N):  # For each graduate
+    friends_utilities = []  # List to hold utilities for all friends of graduate i
+    for f in range(par.F[i]):  # For each friend of graduate i
+        # Simulate utilities from normal distribution centered on par.v with noise par.sigma
+        utilities = np.random.normal(par.v, par.sigma, par.J)
+        # Append the simulated utilities to the friends' list
+        friends_utilities.append(utilities)
+    # Append the friends' utilities list to the main list
+    graduate_friend_utilities.append(friends_utilities)
+
+# Calculate mean utilities across friends for each graduate if needed
+mean_utilities = [np.mean(friend_utilities, axis=0) for friend_utilities in graduate_friend_utilities]
+
+# Determine the maximum utility and corresponding career path for each graduate
+chosen_careers = []
+for i, utilities in enumerate(mean_utilities):
+    max_index = np.argmax(utilities)
+    chosen_careers.append((max_index, utilities[max_index]))
+
+# Print the chosen career paths and their expected utilities
+for i, (career_index, utility) in enumerate(chosen_careers):
+    print(f"Graduate {i + 1} would choose career path {career_index + 1} with an expected utility of {utility:.3f}")
+
+# Initialize a list of lists to store utility values for each v
+choice_utilities = []
+
+# Calculating realized utilities for each career choice and single error draws
+for i, career in enumerate(chosen_careers):
+    v, exp = career
+    utilities = np.mean(np.random.normal(v + 1, par.sigma, 1))
+    choice_utilities.append(utilities)
+
+# Printing realized utilities for each career choice
+for i, utility in enumerate(choice_utilities):
+    print("With this career choice and in the present scenario, graduate", i + 1, "would realize a utility of", utility)
+...
+Does this average over all career paths of friends? I need respective average values for each career of the friends for valid choices
+...
+This again seems to somewhat miss the task; I want 10000 simulations for each type of graduate. Only display choices from the first simulation and average realized utilities across all simulated graduates for every type, respectively
+...
+Step three departs from what I meant; I dont want the realized utility to be dependent on the first simulation. The first simulation choices are only meant to be printed to provide an example of one run.
+...
+Great, now I also would like the expected utilities like you calculated the realized utilities
+---
+import numpy as np
+from types import SimpleNamespace
+
+# Setting up the simulation parameters
+par = SimpleNamespace()
+par.J = 3  # Number of career paths
+par.N = 10  # Number of graduates
+par.K = 10000  # Number of simulations
+par.sigma = 2  # Standard deviation of noise
+par.F = np.arange(1, par.N + 1)  # Number of friends per graduate (1 to N)
+par.v = np.array([1, 2, 3])  # Intrinsic values of each career path
+
+# Seed for reproducibility
+np.random.seed(1703)
+
+# Initialize arrays to store the utilities
+utilities_all_simulations = np.zeros((par.N, par.K, par.J))
+
+# Simulate utilities for each graduate's friends across all simulations
+for i in range(par.N):
+    num_friends = par.F[i]
+    # Generate utilities from friends for all simulations
+    friends_utilities = np.random.normal(par.v, par.sigma, (par.K, num_friends, par.J))
+    # Calculate mean utility for each career path from friends' reports
+    mean_utilities = np.mean(friends_utilities, axis=1)
+    # Store the average utilities
+    utilities_all_simulations[i] = mean_utilities
+
+# Determine the best career path for each graduate in each simulation
+chosen_careers_all_simulations = np.argmax(utilities_all_simulations, axis=2)
+
+# Simulate realized utilities for each graduate's chosen career path across all simulations
+realized_utilities = np.zeros((par.N, par.K))
+expected_utilities = np.zeros((par.N, par.K))
+for i in range(par.N):
+    for k in range(par.K):
+        best_career = chosen_careers_all_simulations[i, k]
+        # Calculate the expected utility for the chosen career path in this simulation
+        expected_utilities[i, k] = par.v[best_career]
+        # Simulate the realized utility for the chosen career path in this simulation
+        realized_utilities[i, k] = np.random.normal(par.v[best_career], par.sigma)
+
+# Calculate the mean expected and realized utilities across all simulations for each graduate
+mean_expected_utilities = np.mean(expected_utilities, axis=1)
+mean_realized_utilities = np.mean(realized_utilities, axis=1)
+
+# Print the chosen career paths and their expected utilities for the first simulation
+print("Choices from the first simulation (for example):")
+for i in range(par.N):
+    career_index = chosen_careers_all_simulations[i, 0]
+    expected_utility = utilities_all_simulations[i, 0, career_index]
+    print(f"Graduate {i + 1} would choose career path {career_index + 1} with an expected utility of {expected_utility:.3f} in the first simulation")
+
+# Print the mean expected and realized utilities for each graduate
+print("\nAverage expected and realized utilities across all simulations:")
+for i in range(par.N):
+    print(f"Graduate {i + 1} would have an average expected utility of {mean_expected_utilities[i]:.3f} and realize an average utility of {mean_realized_utilities[i]:.3f}")
+---
+
+############
+## Prompt 5: ChatGPT 4o
+############
+
+---
+Create a bar chart showing the shares of each type of graduate pursuing each career
+...
+Now also display the expected and realized utilities for each type using boxplots that show not only means but also some of the underlying variance in the data
+...
+Lets stick to bar charts with these statistics
+...
+Make expected and realized utility both in one chart
+---
+import numpy as np
+import matplotlib.pyplot as plt
+from types import SimpleNamespace
+
+# Setting up the simulation parameters
+par = SimpleNamespace()
+par.J = 3  # Number of career paths
+par.N = 10  # Number of graduates
+par.K = 10000  # Number of simulations
+par.sigma = 2  # Standard deviation of noise
+par.F = np.arange(1, par.N + 1)  # Number of friends per graduate (1 to N)
+par.v = np.array([1, 2, 3])  # Intrinsic values of each career path
+
+# Seed for reproducibility
+np.random.seed(1703)
+
+# Initialize arrays to store the utilities
+utilities_all_simulations = np.zeros((par.N, par.K, par.J))
+
+# Simulate utilities for each graduate's friends across all simulations
+for i in range(par.N):
+    num_friends = par.F[i]
+    # Generate utilities from friends for all simulations
+    friends_utilities = np.random.normal(par.v, par.sigma, (par.K, num_friends, par.J))
+    # Calculate mean utility for each career path from friends' reports
+    mean_utilities = np.mean(friends_utilities, axis=1)
+    # Store the average utilities
+    utilities_all_simulations[i] = mean_utilities
+
+# Determine the best career path for each graduate in each simulation
+chosen_careers_all_simulations = np.argmax(utilities_all_simulations, axis=2)
+
+# Simulate realized utilities for each graduate's chosen career path across all simulations
+realized_utilities = np.zeros((par.N, par.K))
+expected_utilities = np.zeros((par.N, par.K))
+for i in range(par.N):
+    for k in range(par.K):
+        best_career = chosen_careers_all_simulations[i, k]
+        # Calculate the expected utility for the chosen career path in this simulation
+        expected_utilities[i, k] = par.v[best_career]
+        # Simulate the realized utility for the chosen career path in this simulation
+        realized_utilities[i, k] = np.random.normal(par.v[best_career], par.sigma)
+
+# Calculate the mean expected and realized utilities across all simulations for each graduate
+mean_expected_utilities = np.mean(expected_utilities, axis=1)
+mean_realized_utilities = np.mean(realized_utilities, axis=1)
+
+# Calculate the shares of each career path chosen by graduates
+career_shares = np.zeros((par.N, par.J))
+for i in range(par.N):
+    for j in range(par.J):
+        career_shares[i, j] = np.mean(chosen_careers_all_simulations[i] == j)
+
+# Create bar charts
+
+# Bar chart for career shares
+fig, ax = plt.subplots(figsize=(12, 8))
+bar_width = 0.25
+r1 = np.arange(par.N)
+r2 = [x + bar_width for x in r1]
+r3 = [x + bar_width for x in r2]
+
+ax.bar(r1, career_shares[:, 0], color='b', width=bar_width, edgecolor='grey', label='Career 1')
+ax.bar(r2, career_shares[:, 1], color='r', width=bar_width, edgecolor='grey', label='Career 2')
+ax.bar(r3, career_shares[:, 2], color='g', width=bar_width, edgecolor='grey', label='Career 3')
+
+ax.set_xlabel('Graduate Type', fontweight='bold')
+ax.set_ylabel('Share of Graduates', fontweight='bold')
+ax.set_title('Shares of Each Type of Graduate Pursuing Each Career', fontweight='bold')
+ax.set_xticks([r + bar_width for r in range(par.N)])
+ax.set_xticklabels([f'Grad {i+1}' for i in range(par.N)])
+ax.legend()
+
+# Display the bar chart for career shares
+plt.show()
+
+# Bar chart for expected and realized utilities
+fig, ax = plt.subplots(figsize=(12, 8))
+bar_width = 0.35
+r1 = np.arange(par.N)
+r2 = [x + bar_width for x in r1]
+
+ax.bar(r1, mean_expected_utilities, color='c', width=bar_width, edgecolor='grey', label='Expected Utility')
+ax.bar(r2, mean_realized_utilities, color='m', width=bar_width, edgecolor='grey', label='Realized Utility')
+
+ax.set_xlabel('Graduate Type', fontweight='bold')
+ax.set_ylabel('Utility', fontweight='bold')
+ax.set_title('Average Expected and Realized Utilities for Each Graduate', fontweight='bold')
+ax.set_xticks([r + bar_width / 2 for r in range(par.N)])
+ax.set_xticklabels([f'Grad {i+1}' for i in range(par.N)])
+ax.legend()
+
+# Display the bar chart for expected and realized utilities
+plt.show()
+---
+
+############
+## Prompt 6: ChatGPT 4o
+############
+
+---
+I have the following code:
+
+(...)
+
+My problem is that among some types of graduates, there are much lower shares of job switching than what the general downward trend from type 1 to type 10 would suggest. What could be the reason for that? These are the shares for types 1 until 10:
+
+[0.4561 0.3777 0.0676 0.2673 0.2377 0.0272 0.0189 0.1666 0.1453 0.0061]
+---
+The problem could be related to how the expected payoffs for switching are calculated and compared to the initial payoffs. Specifically, the calculation of np.mean(utilities_all_simulations[i, :, option]) might be causing inconsistencies. This value represents the average utility across all simulations, not just the current simulation, which might not be the most appropriate measure for the switching decision in the current simulation.
+
+(...)
+
+import numpy as np
+import matplotlib.pyplot as plt
+from types import SimpleNamespace
+
+# Setting up the simulation parameters
+par = SimpleNamespace()
+par.J = 3  # Number of career paths
+par.N = 10  # Number of graduates
+par.K = 10000  # Number of simulations
+par.sigma = 2  # Standard deviation of noise
+par.F = np.arange(1, par.N + 1)  # Number of friends per graduate (1 to N)
+par.v = np.array([1, 2, 3])  # Intrinsic values of each career path
+par.c = 1  # Job switching cost
+
+# Seed for reproducibility
+np.random.seed(1703)
+
+# Initialize arrays to store the utilities
+utilities_all_simulations = np.zeros((par.N, par.K, par.J))
+
+# Simulate utilities for each graduate's friends across all simulations
+for i in range(par.N):
+    num_friends = par.F[i]
+    # Generate utilities from friends for all simulations
+    friends_utilities = np.random.normal(par.v, par.sigma, (par.K, num_friends, par.J))
+    # Calculate mean utility for each career path from friends' reports
+    mean_utilities = np.mean(friends_utilities, axis=1)
+    # Store the average utilities
+    utilities_all_simulations[i] = mean_utilities
+
+# Determine the best career path for each graduate in each simulation
+chosen_careers_all_simulations = np.argmax(utilities_all_simulations, axis=2)
+
+# Calculate the initial payoffs and decide on switching
+initial_payoffs = np.zeros((par.N, par.K))
+switch_decisions = np.zeros((par.N, par.K), dtype=bool)
+switch_payoffs = np.zeros((par.N, par.K))
+for i in range(par.N):
+    for k in range(par.K):
+        best_career = chosen_careers_all_simulations[i, k]
+        initial_payoff = par.v[best_career]
+        initial_payoffs[i, k] = initial_payoff
+        
+        # Calculate the expected payoffs for switching based on current simulation
+        switch_options = [j for j in range(par.J) if j != best_career]
+        switch_payoffs_options = []
+        for option in switch_options:
+            switch_payoff = utilities_all_simulations[i, k, option] - par.c
+            switch_payoffs_options.append(switch_payoff)
+        
+        # Determine if switching is beneficial
+        max_switch_payoff = max(switch_payoffs_options)
+        if max_switch_payoff > initial_payoff:
+            switch_decisions[i, k] = True
+            switch_payoffs[i, k] = max_switch_payoff
+        else:
+            switch_payoffs[i, k] = initial_payoff
+
+# Calculate shares and average utilities
+switch_shares = np.mean(switch_decisions, axis=1)
+average_expected_utilities_switchers = np.zeros(par.N)
+average_realized_utilities_switchers = np.zeros(par.N)
+for i in range(par.N):
+    if np.any(switch_decisions[i]):
+        switch_indices = np.where(switch_decisions[i])[0]
+        average_expected_utilities_switchers[i] = np.mean(switch_payoffs[i, switch_indices])
+        average_realized_utilities_switchers[i] = np.mean(switch_payoffs[i, switch_indices] + np.random.normal(0, par.sigma, len(switch_indices)))
+
+# Plotting shares of graduates who decide to switch
+fig, ax = plt.subplots(figsize=(12, 8))
+ax.bar(np.arange(par.N), switch_shares, color='c', width=0.6, edgecolor='grey')
+ax.set_xlabel('Graduate Type', fontweight='bold')
+ax.set_ylabel('Share of Graduates Who Switch', fontweight='bold')
+ax.set_title('Share of Graduates Who Decide to Switch Careers', fontweight='bold')
+ax.set_xticks(np.arange(par.N))
+ax.set_xticklabels([f'Grad {i+1}' for i in range(par.N)])
+plt.show()
+
+# Plotting average expected and realized utilities for job switchers
+fig, ax = plt.subplots(figsize=(12, 8))
+bar_width = 0.35
+r1 = np.arange(par.N)
+r2 = [x + bar_width for x in r1]
+
+ax.bar(r1, average_expected_utilities_switchers, color='b', width=bar_width, edgecolor='grey', label='Expected Utility')
+ax.bar(r2, average_realized_utilities_switchers, color='r', width=bar_width, edgecolor='grey', label='Realized Utility')
+
+ax.set_xlabel('Graduate Type', fontweight='bold')
+ax.set_ylabel('Utility', fontweight='bold')
+ax.set_title('Average Expected and Realized Utilities for Job Switchers', fontweight='bold')
+ax.set_xticks([r + bar_width / 2 for r in range(par.N)])
+ax.set_xticklabels([f'Grad {i+1}' for i in range(par.N)])
+ax.legend()
+plt.show()
+---

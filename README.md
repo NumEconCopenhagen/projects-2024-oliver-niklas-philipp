@@ -2,7 +2,7 @@
 
 ## Group members
 - Niklas Habermann Andersen
-- Olivers Alexander Kolansky Vogler Dam
+- Oliver Alexander Kolansky Vogler Dam
 - Philipp Heyna
 
 ## Projects

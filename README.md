@@ -1,9 +1,9 @@
 # Readme - Portfolio
 
 ## Group members
-- Niklas Habermann Andersen
-- Oliver Alexander Kolansky Vogler Dam
-- Philipp Heyna
+- Niklas Habermann Andersen (question 1)
+- Oliver Alexander Kolansky Vogler Dam (question 3)
+- Philipp Heyna (question 2)
 
 ## Projects
 

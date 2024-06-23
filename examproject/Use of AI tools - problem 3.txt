@@ -1,0 +1,936 @@
+// I asked AI to make me the function for the arg min in code //
+
+**Question 1 and 2**
+
+import numpy as np
+
+# Generate random points
+rng = np.random.default_rng(2024)
+X = rng.uniform(size=(50, 2))
+y = rng.uniform(size=(2,))
+
+# Euclidean distance function
+def euclidean_distance(x, y):
+    return np.sqrt((x[0] - y[0])**2 + (x[1] - y[1])**2)
+
+# Find the point that minimizes the Euclidean distance to y
+distances = np.array([euclidean_distance(x, y) for x in X])
+min_index = np.argmin(distances)
+A = X[min_index]
+
+print(f"Point A: {A}")
+print(f"Random point y: {y}")
+print(f"Random points X:\n{X}")
+
+
+// I asked it to make it the following constraints 
+ConstraintA = np.array([x for x in X if x[0] > y[0] and x[1] > y[1]])
+ConstraintB = np.array([x for x in X if x[0] > y[0] and x[1] < y[1]])
+ConstraintC= np.array([x for x in X if x[0] < y[0] and x[1] < y[1]])
+ConstraintD= np.array([x for x in X if x[0] < y[0] and x[1] > y[1]]) //
+
+import numpy as np
+
+# Generate random points
+rng = np.random.default_rng(2024)
+X = rng.uniform(size=(50, 2))
+y = rng.uniform(size=(2,))
+
+# Euclidean distance function
+def euclidean_distance(x, y):
+    return np.sqrt((x[0] - y[0])**2 + (x[1] - y[1])**2)
+
+# Define the constraints
+ConstraintA = np.array([x for x in X if x[0] > y[0] and x[1] > y[1]])
+ConstraintB = np.array([x for x in X if x[0] > y[0] and x[1] < y[1]])
+ConstraintC = np.array([x for x in X if x[0] < y[0] and x[1] < y[1]])
+ConstraintD = np.array([x for x in X if x[0] < y[0] and x[1] > y[1]])
+
+# Function to find the point that minimizes the Euclidean distance
+def find_min_distance_point(constraint_set, y):
+    if constraint_set.size > 0:
+        distances = np.linalg.norm(constraint_set - y, axis=1)
+        min_index = np.argmin(distances)
+        return constraint_set[min_index]
+    else:
+        return None
+
+# Find points A, B, C, D
+A = find_min_distance_point(ConstraintA, y)
+B = find_min_distance_point(ConstraintB, y)
+C = find_min_distance_point(ConstraintC, y)
+D = find_min_distance_point(ConstraintD, y)
+
+print(f"Point A: {A}")
+print(f"Point B: {B}")
+print(f"Point C: {C}")
+print(f"Point D: {D}")
+print(f"Random point y: {y}")
+print(f"Random points X:\n{X}")
+print(f"Points satisfying Constraint A:\n{ConstraintA}")
+print(f"Points satisfying Constraint B:\n{ConstraintB}")
+print(f"Points satisfying Constraint C:\n{ConstraintC}")
+print(f"Points satisfying Constraint D:\n{ConstraintD}")
+
+// I ask the AI to compute the formula for the barycentric coordinates //
+
+import numpy as np
+
+# Define the points A, B, C, and the point y
+A = np.array([A1, A2])
+B = np.array([B1, B2])
+C = np.array([C1, C2])
+y = np.array([y1, y2])
+
+# Calculate r1^ABC
+numerator = (B[1] - C[1]) * (y[0] - C[0]) + (C[0] - B[0]) * (y[1] - C[1])
+denominator = (B[1] - C[1]) * (A[0] - C[0]) + (C[0] - B[0]) * (A[1] - C[1])
+r1_ABC = numerator / denominator
+
+print(f"r1^ABC: {r1_ABC}")
+
+
+// I ask it to make a control for y // 
+
+import numpy as np
+
+# Define the points A, B, C, and the point y
+A = np.array([A1, A2])
+B = np.array([B1, B2])
+C = np.array([C1, C2])
+y = np.array([y1, y2])
+
+# Calculate r1^ABC
+def calculate_r1_ABC(A, B, C, y):
+    numerator = (B[1] - C[1]) * (y[0] - C[0]) + (C[0] - B[0]) * (y[1] - C[1])
+    denominator = (B[1] - C[1]) * (A[0] - C[0]) + (C[0] - B[0]) * (A[1] - C[1])
+    return numerator / denominator
+
+# Calculate r2^ABC
+def calculate_r2_ABC(A, B, C, y):
+    numerator = (C[1] - A[1]) * (y[0] - C[0]) + (
+
+// I ask it to make the same calculations as if it was a CDA triangle //
+
+# Assuming points C, D, A, and y are defined as numpy arrays
+C = np.array([C1, C2])
+D = np.array([D1, D2])
+A = np.array([A1, A2])
+y = np.array([y1, y2])
+
+# Calculate r1^CDA
+numerator_1_CDA = (D[1] - A[1]) * (y[0] - A[0]) + (A[0] - D[0]) * (y[1] - A[1])
+denominator_CDA = (D[1] - A[1]) * (C[0] - A[0]) + (A[0] - D[0]) * (C[1] - A[1])
+r1_CDA = numerator_1_CDA / denominator_CDA
+
+# Calculate r2^CDA
+numerator_2_CDA = (A[1] - C[1]) * (y[0] - A[0]) + (C[0] - A[0]) * (y[1] - A[1])
+r2_CDA = numerator_2_CDA / denominator_CDA
+
+# Calculate r3^CDA
+r3_CDA = 1 - r1_CDA - r2_CDA
+
+print(f"r1_CDA: {r1_CDA}")
+print(f"r2_CDA: {r2_CDA}")
+print(f"r3_CDA: {r3_CDA}")
+
+// I add a chacker for which triangle it is in //
+
+import numpy as np
+
+# Euclidean distance function
+def euclidean_distance(x, y):
+    return np.sqrt((x[0] - y[0])**2 + (x[1] - y[1])**2)
+
+# Define the constraints
+ConstraintA = np.array([x for x in X if x[0] > y[0] and x[1] > y[1]])
+ConstraintB = np.array([x for x in X if x[0] > y[0] and x[1] < y[1]])
+ConstraintC = np.array([x for x in X if x[0] < y[0] and x[1] < y[1]])
+ConstraintD = np.array([x for x in X if x[0] < y[0] and x[1] > y[1]])
+
+# Function to find the point that minimizes the Euclidean distance
+def find_min_distance_point(constraint_set, y):
+    if constraint_set.size > 0:
+        distances = np.linalg.norm(constraint_set - y, axis=1)
+        min_index = np.argmin(distances)
+        return constraint_set[min_index]
+    else:
+        return np.nan, np.nan
+
+# Find points A, B, C, D
+A = find_min_distance_point(ConstraintA, y)
+B = find_min_distance_point(ConstraintB, y)
+C = find_min_distance_point(ConstraintC, y)
+D = find_min_distance_point(ConstraintD, y)
+
+# Ensure A, B, and C are not NaN
+if np.isnan(A).any() or np.isnan(B).any() or np.isnan(C).any():
+    print("One or more points A, B, or C are NaN. Cannot calculate barycentric coordinates.")
+else:
+    # Calculate r1^ABC
+    numerator_1_ABC = (B[1] - C[1]) * (y[0] - C[0]) + (C[0] - B[0]) * (y[1] - C[1])
+    denominator_ABC = (B[1] - C[1]) * (A[0] - C[0]) + (C[0] - B[0]) * (A[1] - C[1])
+    r1_ABC = numerator_1_ABC / denominator_ABC
+    
+    # Calculate r2^ABC
+    numerator_2_ABC = (C[1] - A[1]) * (y[0] - C[0]) + (A[0] - C[0]) * (y[1] - C[1])
+    r2_ABC = numerator_2_ABC / denominator_ABC
+    
+    # Calculate r3^ABC
+    r3_ABC = 1 - r1_ABC - r2_ABC
+
+    # Calculate r1^CDA
+    numerator_1_CDA = (D[1] - A[1]) * (y[0] - A[0]) + (A[0] - D[0]) * (y[1] - A[1])
+    denominator_CDA = (D[1] - A[1]) * (C[0] - A[0]) + (A[0] - D[0]) * (C[1] - A[1])
+    r1_CDA = numerator_1_CDA / denominator_CDA
+
+    # Calculate r2^CDA
+    numerator_2_CDA = (A[1] - C[1]) * (y[0] - A[0]) + (C[0] - A[0]) * (y[1] - A[1])
+    r2_CDA = numerator_2_CDA / denominator_CDA
+
+    # Calculate r3^CDA
+    r3_CDA = 1 - r1_CDA - r2_CDA
+
+    print(f"r1_CDA: {r1_CDA}")
+    print(f"r2_CDA: {r2_CDA}")
+    print(f"r3_CDA: {r3_CDA}")
+    print(f"Point A: {A}")
+    print(f"Point B: {B}")
+    print(f"Point C: {C}")
+    print(f"Point D: {D}")
+    print(f"r1_ABC: {r1_ABC}")
+    print(f"r2_ABC: {r2_ABC}")
+    print(f"r3_ABC: {r3_ABC}")
+    
+    # Check if y = r1_ABC * A + r2_ABC * B + r3_ABC * C
+    y_reconstructed_ABC = r1_ABC * A + r2_ABC * B + r3_ABC * C
+    if np.allclose(y, y_reconstructed_ABC):
+        print("r_1^ABC * A + r_2^ABC * B + r_3^ABC * C")
+    
+    # Check if the barycentric coordinates are within [0, 1]
+    if 0 <= r1_ABC <= 1 and 0 <= r2_ABC <= 1 and 0 <= r3_ABC <= 1:
+        print("r^ABC_1*f(A) + r^ABC_2*f(B) + r^ABC_3 * f(C)")
+    
+    # Check if y = r1_CDA * C + r2_CDA * D + r3_CDA * A
+    y_reconstructed_CDA = r1_CDA * C + r2_CDA * D + r3_CDA * A
+    if np.allclose(y, y_reconstructed_CDA):
+        print("Yes, y equals r1_CDA * C + r2_CDA * D + r3_CDA * A")
+
+// I ask the AI to plot the different functions for me //
+
+import numpy as np
+import matplotlib.pyplot as plt
+
+# Generate random points
+rng = np.random.default_rng(2024)
+X = rng.uniform(size=(50, 2))
+y = rng.uniform(size=(2,))
+
+# Euclidean distance function
+def euclidean_distance(x, y):
+    return np.sqrt((x[0] - y[0])**2 + (x[1] - y[1])**2)
+
+# Define the constraints
+ConstraintA = np.array([x for x in X if x[0] > y[0] and x[1] > y[1]])
+ConstraintB = np.array([x for x in X if x[0] > y[0] and x[1] < y[1]])
+ConstraintC = np.array([x for x in X if x[0] < y[0] and x[1] < y[1]])
+ConstraintD = np.array([x for x in X if x[0] < y[0] and x[1] > y[1]])
+
+# Function to find the point that minimizes the Euclidean distance
+def find_min_distance_point(constraint_set, y):
+    if constraint_set.size > 0:
+        distances = np.linalg.norm(constraint_set - y, axis=1)
+        min_index = np.argmin(distances)
+        return constraint_set[min_index]
+    else:
+        return np.nan, np.nan
+
+# Find points A, B, C, D
+A = find_min_distance_point(ConstraintA, y)
+B = find_min_distance_point(ConstraintB, y)
+C = find_min_distance_point(ConstraintC, y)
+D = find_min_distance_point(ConstraintD, y)
+
+# Ensure A, B, and C are not NaN
+if np.isnan(A).any() or np.isnan(B).any() or np.isnan(C).any():
+    print("One or more points A, B, or C are NaN. Cannot calculate barycentric coordinates.")
+else:
+    # Calculate r1^ABC
+    numerator_1_ABC = (B[1] - C[1]) * (y[0] - C[0]) + (C[0] - B[0]) * (y[1] - C[1])
+    denominator_ABC = (B[1] - C[1]) * (A[0] - C[0]) + (C[0] - B[0]) * (A[1] - C[1])
+    r1_ABC = numerator_1_ABC / denominator_ABC
+    
+    # Calculate r2^ABC
+    numerator_2_ABC = (C[1] - A[1]) * (y[0] - C[0]) + (A[0] - C[0]) * (y[1] - C[1])
+    r2_ABC = numerator_2_ABC / denominator_ABC
+    
+    # Calculate r3^ABC
+    r3_ABC = 1 - r1_ABC - r2_ABC
+
+    # Calculate r1^CDA
+    numerator_1_CDA = (D[1] - A[1]) * (y[0] - A[0]) + (A[0] - D[0]) * (y[1] - A[1])
+    denominator_CDA = (D[1] - A[1]) * (C[0] - A[0]) + (A[0] - D[0]) * (C[1] - A[1])
+    r1_CDA = numerator_1_CDA / denominator_CDA
+
+    # Calculate r2^CDA
+    numerator_2_CDA = (A[1] - C[1]) * (y[0] - A[0]) + (C[0] - A[0]) * (y[1] - A[1])
+    r2_CDA = numerator_2_CDA / denominator_CDA
+
+    # Calculate r3^CDA
+    r3_CDA = 1 - r1_CDA - r2_CDA
+
+    print(f"Point A: {A}")
+    print(f"Point B: {B}")
+    print(f"Point C: {C}")
+    print(f"Point D: {D}")
+    
+    # Check if y = r1_ABC * A + r2_ABC * B + r3_ABC * C
+    y_reconstructed_ABC = r1_ABC * A + r2_ABC * B + r3_ABC * C
+    if np.allclose(y, y_reconstructed_ABC):
+        print(f"y = r_1^{{ABC}} * A + r_2^{{ABC}} * B + r_3^{{ABC}} * C")
+
+    # Check if the barycentric coordinates are within [0, 1]
+    if 0 <= r1_ABC <= 1 and 0 <= r2_ABC <= 1 and 0 <= r3_ABC <= 1:
+        print(f"y = {r1_ABC:.4f} * f(A) + {r2_ABC:.4f} * f(B) + {r3_ABC:.4f} * f(C)")
+
+    # Check if y = r1_CDA * C + r2_CDA * D + r3_CDA * A
+    y_reconstructed_CDA = r1_CDA * C + r2_CDA * D + r3_CDA * A
+    if np.allclose(y, y_reconstructed_CDA):
+        print(f"y = r_1^{{CDA}} * C + r_2^{{CDA}} * D + r_3^{{CDA}} * A")
+
+    # Plot the points and the triangles
+    plt.figure(figsize=(10, 8))
+    plt.scatter(X[:, 0], X[:, 1], color='gray', label='Points in X')
+    plt.scatter(y[0], y[1], color='red', label='Point y', zorder=5)
+    plt.scatter([A[0], B[0], C[0], D[0]], [A[1], B[1], C[1], D[1]], color=['blue', 'green', 'purple', 'orange'], label='Points A, B, C, D', zorder=5)
+    
+    plt.plot([A[0], B[0]], [A[1], B[1]], 'b-')
+    plt.plot([B[0], C[0]], [B[1], C[1]], 'b-')
+    plt.plot([C[0], A[0]], [C[1], A[1]], 'b-', label='Triangle ABC')
+    
+    plt.plot([C[0], D[0]], [C[1], D[1]], 'r-')
+    plt.plot([D[0], A[0]], [D[1], A[1]], 'r-')
+    plt.plot([A[0], C[0]], [A[1], C[1]], 'r-', label='Triangle CDA')
+    
+    plt.legend()
+    plt.xlabel('X1')
+    plt.ylabel('X2')
+    plt.title('Points and Triangles')
+    plt.grid(True)
+    plt.show()
+
+
+// I apply the formula for y_f given the points A, B and C for triangle ABC. It wont let go of certain parts of the code though //
+
+import numpy as np
+import matplotlib.pyplot as plt
+
+# Generate random points
+rng = np.random.default_rng(2024)
+X = rng.uniform(size=(50, 2))
+y = rng.uniform(size=(2,))
+
+# Euclidean distance function
+def euclidean_distance(x, y):
+    return np.sqrt((x[0] - y[0])**2 + (x[1] - y[1])**2)
+
+# Define the constraints
+ConstraintA = np.array([x for x in X if x[0] > y[0] and x[1] > y[1]])
+ConstraintB = np.array([x for x in X if x[0] > y[0] and x[1] < y[1]])
+ConstraintC = np.array([x for x in X if x[0] < y[0] and x[1] < y[1]])
+ConstraintD = np.array([x for x in X if x[0] < y[0] and x[1] > y[1]])
+
+# Function to find the point that minimizes the Euclidean distance
+def find_min_distance_point(constraint_set, y):
+    if constraint_set.size > 0:
+        distances = np.linalg.norm(constraint_set - y, axis=1)
+        min_index = np.argmin(distances)
+        return constraint_set[min_index]
+    else:
+        return np.nan, np.nan
+
+# Find points A, B, C, D
+A = find_min_distance_point(ConstraintA, y)
+B = find_min_distance_point(ConstraintB, y)
+C = find_min_distance_point(ConstraintC, y)
+D = find_min_distance_point(ConstraintD, y)
+
+# Function f
+f = lambda x: x[0] * x[1]
+F = np.array([f(x) for x in X])
+
+# Ensure A, B, and C are not NaN
+if np.isnan(A).any() or np.isnan(B).any() or np.isnan(C).any():
+    print("One or more points A, B, or C are NaN. Cannot calculate barycentric coordinates.")
+else:
+    # Calculate r1^ABC
+    numerator_1_ABC = (B[1] - C[1]) * (y[0] - C[0]) + (C[0] - B[0]) * (y[1] - C[1])
+    denominator_ABC = (B[1] - C[1]) * (A[0] - C[0]) + (C[0] - B[0]) * (A[1] - C[1])
+    r1_ABC = numerator_1_ABC / denominator_ABC
+    
+    # Calculate r2^ABC
+    numerator_2_ABC = (C[1] - A[1]) * (y[0] - C[0]) + (A[0] - C[0]) * (y[1] - C[1])
+    r2_ABC = numerator_2_ABC / denominator_ABC
+    
+    # Calculate r3^ABC
+    r3_ABC = 1 - r1_ABC - r2_ABC
+
+    # Calculate r1^CDA
+    numerator_1_CDA = (D[1] - A[1]) * (y[0] - A[0]) + (A[0] - D[0]) * (y[1] - A[1])
+    denominator_CDA = (D[1] - A[1]) * (C[0] - A[0]) + (A[0] - D[0]) * (C[1] - A[1])
+    r1_CDA = numerator_1_CDA / denominator_CDA
+
+    # Calculate r2^CDA
+    numerator_2_CDA = (A[1] - C[1]) * (y[0] - A[0]) + (C[0] - A[0]) * (y[1] - A[1])
+    r2_CDA = numerator_2_CDA / denominator_CDA
+
+    # Calculate r3^CDA
+    r3_CDA = 1 - r1_CDA - r2_CDA
+
+    print(f"Point A: {A}")
+    print(f"Point B: {B}")
+    print(f"Point C: {C}")
+    print(f"Point D: {D}")
+    
+    # Check if y = r1_ABC * A + r2_ABC * B + r3_ABC * C
+    y_reconstructed_ABC = r1_ABC * A + r2_ABC * B + r3_ABC * C
+    if np.allclose(y, y_reconstructed_ABC):
+        print(f"y = r_1^{{ABC}} * A + r_2^{{ABC}} * B + r_3^{{ABC}} * C")
+
+    # Check if the barycentric coordinates are within [0, 1]
+    if 0 <= r1_ABC <= 1 and 0 <= r2_ABC <= 1 and 0 <= r3_ABC <= 1:
+        print(f"y = {r1_ABC:.4f} * f(A) + {r2_ABC:.4f} * f(B) + {r3_ABC:.4f} * f(C)")
+
+    # Check if y = r1_CDA * C + r2_CDA * D + r3_CDA * A
+    y_reconstructed_CDA = r1_CDA * C + r2_CDA * D + r3_CDA * A
+    if np.allclose(y, y_reconstructed_CDA):
+        print(f"y = r_1^{{CDA}} * C + r_2^{{CDA}} * D + r_3^{{CDA}} * A")
+
+    # Calculate f(A), f(B), f(C), f(y)
+    f_A = f(A)
+    f_B = f(B)
+    f_C = f(C)
+    f_y = f(y)
+
+    # Calculate y_f
+    y_f = r1_ABC * f_A + r2_ABC * f_B + r3_ABC * f_C
+    print(f"f(y) = {f_y:.4f} = {r1_ABC:.4f} * f(A) + {r2_ABC:.4f} * f(B) + {r3_ABC:.4f} * f(C)")
+
+    # Plot the points and the triangles
+    plt.figure(figsize=(10, 8))
+    plt.scatter(X[:, 0], X[:, 1], color='gray', label='Points in X')
+    plt.scatter(y[0], y[1], color='red', label='Point y', zorder=5)
+    plt.scatter([A[0], B[0], C[0], D[0]], [A[1], B[1], C[1], D[1]], color=['blue', 'green', 'purple', 'orange'], label='Points A, B, C, D', zorder=5)
+    
+    plt.plot([A[0], B[0]], [A[1], B[1]], 'b-')
+    plt.plot([B[0], C[0]], [B[1], C[1]], 'b-')
+    plt.plot([C[0], A[0]], [C[1], A[1]], 'b-', label='Triangle ABC')
+    
+    plt.plot([C[0], D[0]], [C[1], D[1]], 'r-')
+    plt.plot([D[0], A[0]], [D[1], A[1]], 'r-')
+    plt.plot([A[0], C[0]], [A[1], C[1]], 'r-', label='Triangle CDA')
+    
+    plt.legend()
+    plt.xlabel('X1')
+    plt.ylabel('X2')
+    plt.title('Points and Triangles')
+    plt.grid(True)
+    plt.show()
+
+
+
+// We now need to these calculations again but for when y is given by the set Y
+
+# Euclidean distance function
+def euclidean_distance(x, y):
+    return np.sqrt((x[0] - y[0])**2 + (x[1] - y[1])**2)
+
+# Define the constraints
+ConstraintA = np.array([x for x in X if x[0] > y[0] and x[1] > y[1]])
+ConstraintB = np.array([x for x in X if x[0] > y[0] and x[1] < y[1]])
+ConstraintC = np.array([x for x in X if x[0] < y[0] and x[1] < y[1]])
+ConstraintD = np.array([x for x in X if x[0] < y[0] and x[1] > y[1]])
+
+# Function to find the point that minimizes the Euclidean distance
+def find_min_distance_point(constraint_set, y):
+    if constraint_set.size > 0:
+        distances = np.linalg.norm(constraint_set - y, axis=1)
+        min_index = np.argmin(distances)
+        return constraint_set[min_index]
+    else:
+        return np.nan, np.nan
+
+# Find points A, B, C, D
+A = find_min_distance_point(ConstraintA, y)
+B = find_min_distance_point(ConstraintB, y)
+C = find_min_distance_point(ConstraintC, y)
+D = find_min_distance_point(ConstraintD, y)
+
+Y = [(0.2,0.2),(0.8,0.2),(0.8,0.8),(0.8,0.2),(0.5,0.5)] //
+
+import numpy as np
+import matplotlib.pyplot as plt
+
+# Generate random points
+rng = np.random.default_rng(2024)
+X = rng.uniform(size=(50, 2))
+
+# Define the function f
+f = lambda x: x[0] * x[1]
+F = np.array([f(x) for x in X])
+
+# Euclidean distance function
+def euclidean_distance(x, y):
+    return np.sqrt((x[0] - y[0])**2 + (x[1] - y[1])**2)
+
+# Function to find the point that minimizes the Euclidean distance
+def find_min_distance_point(constraint_set, y):
+    if constraint_set.size > 0:
+        distances = np.linalg.norm(constraint_set - y, axis=1)
+        min_index = np.argmin(distances)
+        return constraint_set[min_index]
+    else:
+        return np.nan, np.nan
+
+# Points in Y
+Y = [(0.2, 0.2), (0.8, 0.2), (0.8, 0.8), (0.8, 0.2), (0.5, 0.5)]
+
+# Iterate over each point in Y
+for y in Y:
+    y = np.array(y)
+
+    # Define the constraints
+    ConstraintA = np.array([x for x in X if x[0] > y[0] and x[1] > y[1]])
+    ConstraintB = np.array([x for x in X if x[0] > y[0] and x[1] < y[1]])
+    ConstraintC = np.array([x for x in X if x[0] < y[0] and x[1] < y[1]])
+    ConstraintD = np.array([x for x in X if x[0] < y[0] and x[1] > y[1]])
+
+    # Find points A, B, C, D
+    A = find_min_distance_point(ConstraintA, y)
+    B = find_min_distance_point(ConstraintB, y)
+    C = find_min_distance_point(ConstraintC, y)
+    D = find_min_distance_point(ConstraintD, y)
+
+    # Ensure A, B, and C are not NaN
+    if np.isnan(A).any() or np.isnan(B).any() or np.isnan(C).any():
+        print(f"One or more points A, B, or C are NaN for y = {y}. Cannot calculate barycentric coordinates.")
+        continue
+
+    # Calculate r1^ABC
+    numerator_1_ABC = (B[1] - C[1]) * (y[0] - C[0]) + (C[0] - B[0]) * (y[1] - C[1])
+    denominator_ABC = (B[1] - C[1]) * (A[0] - C[0]) + (C[0] - B[0]) * (A[1] - C[1])
+    r1_ABC = numerator_1_ABC / denominator_ABC
+
+    # Calculate r2^ABC
+    numerator_2_ABC = (C[1] - A[1]) * (y[0] - C[0]) + (A[0] - C[0]) * (y[1] - C[1])
+    r2_ABC = numerator_2_ABC / denominator_ABC
+
+    # Calculate r3^ABC
+    r3_ABC = 1 - r1_ABC - r2_ABC
+
+    # Calculate r1^CDA
+    numerator_1_CDA = (D[1] - A[1]) * (y[0] - A[0]) + (A[0] - D[0]) * (y[1] - A[1])
+    denominator_CDA = (D[1] - A[1]) * (C[0] - A[0]) + (A[0] - D[0]) * (C[1] - A[1])
+    r1_CDA = numerator_1_CDA / denominator_CDA
+
+    # Calculate r2^CDA
+    numerator_2_CDA = (A[1] - C[1]) * (y[0] - A[0]) + (C[0] - A[0]) * (y[1] - A[1])
+    r2_CDA = numerator_2_CDA / denominator_CDA
+
+    # Calculate r3^CDA
+    r3_CDA = 1 - r1_CDA - r2_CDA
+
+    print(f"Point A: {A}")
+    print(f"Point B: {B}")
+    print(f"Point C: {C}")
+    print(f"Point D: {D}")
+
+    # Check if y = r1_ABC * A + r2_ABC * B + r3_ABC * C
+    y_reconstructed_ABC = r1_ABC * A + r2_ABC * B + r3_ABC * C
+    if np.allclose(y, y_reconstructed_ABC):
+        print(f"y = r_1^{{ABC}} * A + r_2^{{ABC}} * B + r_3^{{ABC}} * C for y = {y}")
+
+    # Check if the barycentric coordinates are within [0, 1]
+    if 0 <= r1_ABC <= 1 and 0 <= r2_ABC <= 1 and 0 <= r3_ABC <= 1:
+        print(f"y = {r1_ABC:.4f} * f(A) + {r2_ABC:.4f} * f(B) + {r3_ABC:.4f} * f(C) for y = {y}")
+
+    # Check if y = r1_CDA * C + r2_CDA * D + r3_CDA * A
+    y_reconstructed_CDA = r1_CDA * C + r2_CDA * D + r3_CDA * A
+    if np.allclose(y, y_reconstructed_CDA):
+        print(f"y = r_1^{{CDA}} * C + r_2^{{CDA}} * D + r_3^{{CDA}} * A for y = {y}")
+
+    # Calculate f(A), f(B), f(C), f(y) using function f
+    f_A = f(A)
+    f_B = f(B)
+    f_C = f(C)
+    f_y = f(y)
+
+    # Calculate y_f using barycentric coordinates
+    y_f = r1_ABC * f_A + r2_ABC * f_B + r3_ABC * f_C
+    print(f"f(A) = {f_A:.4f}")
+    print(f"f(B) = {f_B:.4f}")
+    print(f"f(C) = {f_C:.4f}")
+    print(f"f(y) = {f_y:.4f} = {r1_ABC:.4f} * f(A) + {r2_ABC:.4f} * f(B) + {r3_ABC:.4f} * f(C) for y = {y}")
+
+    # Calculate F for y
+    F_y = f(y)
+    print(f"F(y) = {F_y:.4f} for y = {y}")
+
+    # Plot the points and the triangles
+    plt.figure(figsize=(10, 8))
+    plt.scatter(X[:, 0], X[:, 1], color='gray', label='Points in X')
+    plt.scatter(y[0], y[1], color='red', label='Point y', zorder=5)
+    plt.scatter([A[0], B[0], C[0], D[0]], [A[1], B[1], C[1], D[1]], color=['blue', 'green', 'purple', 'orange'], label='Points A, B, C, D', zorder=5)
+
+    plt.plot([A[0], B[0]], [A[1], B[1]], 'b-')
+    plt.plot([B[0], C[0]], [B[1], C[1]], 'b-')
+    plt.plot([C[0], A[0]], [C[1], A[1]], 'b-', label='Triangle ABC')
+
+    plt.plot([C[0], D[0]], [C[1], D[1]], 'r-')
+    plt.plot([D[0], A[0]], [D[1], A[1]], 'r-')
+    plt.plot([A[0], C[0]], [A[1], C[1]], 'r-', label='Triangle CDA')
+
+    plt.legend()
+    plt.xlabel('X1')
+    plt.ylabel('X2')
+    plt.title(f'Points and Triangles for y = {y}')
+    plt.grid(True)
+    plt.show()
+
+
+// i ask the AI to name the points A B C D for their respective y in Y. //
+
+import numpy as np
+import matplotlib.pyplot as plt
+
+# Generate random points
+rng = np.random.default_rng(2024)
+X = rng.uniform(size=(50, 2))
+
+# Define the function f
+f = lambda x: x[0] * x[1]
+F = np.array([f(x) for x in X])
+
+# Euclidean distance function
+def euclidean_distance(x, y):
+    return np.sqrt((x[0] - y[0])**2 + (x[1] - y[1])**2)
+
+# Function to find the point that minimizes the Euclidean distance
+def find_min_distance_point(constraint_set, y):
+    if constraint_set.size > 0:
+        distances = np.linalg.norm(constraint_set - y, axis=1)
+        min_index = np.argmin(distances)
+        return constraint_set[min_index]
+    else:
+        return np.nan, np.nan
+
+# Points in Y
+Y = [(0.2, 0.2), (0.8, 0.2), (0.8, 0.8), (0.8, 0.2), (0.5, 0.5)]
+
+# Iterate over each point in Y
+for y in Y:
+    y = np.array(y)
+    print(f"Calculations for y = {y}")
+
+    # Define the constraints
+    ConstraintA = np.array([x for x in X if x[0] > y[0] and x[1] > y[1]])
+    ConstraintB = np.array([x for x in X if x[0] > y[0] and x[1] < y[1]])
+    ConstraintC = np.array([x for x in X if x[0] < y[0] and x[1] < y[1]])
+    ConstraintD = np.array([x for x in X if x[0] < y[0] and x[1] > y[1]])
+
+    # Find points A, B, C, D
+    A = find_min_distance_point(ConstraintA, y)
+    B = find_min_distance_point(ConstraintB, y)
+    C = find_min_distance_point(ConstraintC, y)
+    D = find_min_distance_point(ConstraintD, y)
+
+    A_name = f"A({y[0]},{y[1]})"
+    B_name = f"B({y[0]},{y[1]})"
+    C_name = f"C({y[0]},{y[1]})"
+    D_name = f"D({y[0]},{y[1]})"
+
+    print(f"Point {A_name}: {A}")
+    print(f"Point {B_name}: {B}")
+    print(f"Point {C_name}: {C}")
+    print(f"Point {D_name}: {D}")
+
+    # Ensure A, B, and C are not NaN
+    if np.isnan(A).any() or np.isnan(B).any() or np.isnan(C).any():
+        print(f"One or more points {A_name}, {B_name}, or {C_name} are NaN for y = {y}. Cannot calculate barycentric coordinates.")
+        continue
+
+    # Calculate r1^ABC
+    numerator_1_ABC = (B[1] - C[1]) * (y[0] - C[0]) + (C[0] - B[0]) * (y[1] - C[1])
+    denominator_ABC = (B[1] - C[1]) * (A[0] - C[0]) + (C[0] - B[0]) * (A[1] - C[1])
+    r1_ABC = numerator_1_ABC / denominator_ABC
+
+    # Calculate r2^ABC
+    numerator_2_ABC = (C[1] - A[1]) * (y[0] - C[0]) + (A[0] - C[0]) * (y[1] - C[1])
+    r2_ABC = numerator_2_ABC / denominator_ABC
+
+    # Calculate r3^ABC
+    r3_ABC = 1 - r1_ABC - r2_ABC
+
+    # Calculate r1^CDA
+    numerator_1_CDA = (D[1] - A[1]) * (y[0] - A[0]) + (A[0] - D[0]) * (y[1] - A[1])
+    denominator_CDA = (D[1] - A[1]) * (C[0] - A[0]) + (A[0] - D[0]) * (C[1] - A[1])
+    r1_CDA = numerator_1_CDA / denominator_CDA
+
+    # Calculate r2^CDA
+    numerator_2_CDA = (A[1] - C[1]) * (y[0] - A[0]) + (C[0] - A[0]) * (y[1] - A[1])
+    r2_CDA = numerator_2_CDA / denominator_CDA
+
+    # Calculate r3^CDA
+    r3_CDA = 1 - r1_CDA - r2_CDA
+
+    # Check if y = r1_ABC * A + r2_ABC * B + r3_ABC * C
+    y_reconstructed_ABC = r1_ABC * A + r2_ABC * B + r3_ABC * C
+    if np.allclose(y, y_reconstructed_ABC):
+        print(f"y = r_1^{{ABC}} * A + r_2^{{ABC}} * B + r_3^{{ABC}} * C for y = {y}")
+
+    # Check if the barycentric coordinates are within [0, 1]
+    if 0 <= r1_ABC <= 1 and 0 <= r2_ABC <= 1 and 0 <= r3_ABC <= 1:
+        print(f"y = {r1_ABC:.4f} * f(A) + {r2_ABC:.4f} * f(B) + {r3_ABC:.4f} * f(C) for y = {y}")
+
+    # Check if y = r1_CDA * C + r2_CDA * D + r3_CDA * A
+    y_reconstructed_CDA = r1_CDA * C + r2_CDA * D + r3_CDA * A
+    if np.allclose(y, y_reconstructed_CDA):
+        print(f"y = r_1^{{CDA}} * C + r_2^{{CDA}} * D + r_3^{{CDA}} * A for y = {y}")
+
+    # Calculate f(A), f(B), f(C), f(y) using function f
+    f_A = f(A)
+    f_B = f(B)
+    f_C = f(C)
+    f_y = f(y)
+
+    # Calculate y_f using barycentric coordinates
+    y_f = r1_ABC * f_A + r2_ABC * f_B + r3_ABC * f_C
+    print(f"f(A) = {f_A:.4f}")
+    print(f"f(B) = {f_B:.4f}")
+    print(f"f(C) = {f_C:.4f}")
+    print(f"f(y) = {f_y:.4f} = {r1_ABC:.4f} * f(A) + {r2_ABC:.4f} * f(B) + {r3_ABC:.4f} * f(C) for y = {y}")
+
+    # Calculate F for y
+    F_y = f(y)
+    print(f"F(y) = {F_y:.4f} for y = {y}")
+    print("\n")
+
+    # Plot the points and the triangles
+    plt.figure(figsize=(10, 8))
+    plt.scatter(X[:, 0], X[:, 1], color='gray', label='Points in X')
+    plt.scatter(y[0], y[1], color='red', label='Point y', zorder=5)
+    plt.scatter([A[0], B[0], C[0], D[0]], [A[1], B[1], C[1], D[1]], color=['blue', 'green', 'purple', 'orange'], label=f'Points {A_name}, {B_name}, {C_name}, {D_name}', zorder=5)
+
+    plt.plot([A[0], B[0]], [A[1], B[1]], 'b-')
+    plt.plot([B[0], C[0]], [B[1], C[1]], 'b-')
+    plt.plot([C[0], A[0]], [C[1], A[1]], 'b-', label='Triangle ABC')
+
+    plt.plot([C[0], D[0]], [C[1], D[1]], 'r-')
+    plt.plot([D[0], A[0]], [D[1], A[1]], 'r-')
+    plt.plot([A[0], C[0]], [A[1], C[1]], 'r-', label='Triangle CDA')
+
+    plt.legend()
+    plt.xlabel('X1')
+    plt.ylabel('X
+
+// I ask it to do the same for the barycentric coordinates //
+
+we now need to do these calcualtions for each set of y in Y
+
+# Ensure A, B, and C are not NaN
+if np.isnan(A).any() or np.isnan(B).any() or np.isnan(C).any():
+    print("One or more points A, B, or C are NaN. Cannot calculate barycentric coordinates.")
+else:
+    # Calculate r1^ABC
+    numerator_1_ABC = (B[1] - C[1]) * (y[0] - C[0]) + (C[0] - B[0]) * (y[1] - C[1])
+    denominator_ABC = (B[1] - C[1]) * (A[0] - C[0]) + (C[0] - B[0]) * (A[1] - C[1])
+    r1_ABC = numerator_1_ABC / denominator_ABC
+    
+    # Calculate r2^ABC
+    numerator_2_ABC = (C[1] - A[1]) * (y[0] - C[0]) + (A[0] - C[0]) * (y[1] - C[1])
+    r2_ABC = numerator_2_ABC / denominator_ABC
+    
+    # Calculate r3^ABC
+    r3_ABC = 1 - r1_ABC - r2_ABC
+
+    numerator_1_CDA = (D[1] - A[1]) * (y[0] - A[0]) + (A[0] - D[0]) * (y[1] - A[1])
+    denominator_CDA = (D[1] - A[1]) * (C[0] - A[0]) + (A[0] - D[0]) * (C[1] - A[1])
+    r1_CDA = numerator_1_CDA / denominator_CDA
+
+    # Calculate r2^CDA
+    numerator_2_CDA = (A[1] - C[1]) * (y[0] - A[0]) + (C[0] - A[0]) * (y[1] - A[1])
+    r2_CDA = numerator_2_CDA / denominator_CDA
+
+    # Calculate r3^CDA
+    r3_CDA = 1 - r1_CDA - r2_CDA
+
+    if 0 <= r1_ABC <= 1 and 0 <= r2_ABC <= 1 and 0 <= r3_ABC <= 1:
+        print('y is located in triangle ABC and fr_1^{{ABC}} * f(A) + r_2^{{ABC}} * f(B) + r_3^{{ABC}} * f(C)')
+    else:
+        print('NaN')
+    if 0 <= r1_CDA <= 1 and 0 <= r2_CDA <= 1 and 0 <= r3_CDA <= 1:
+        print('y is locatedf in triangle CDA and r_1^{{CDA}} * f(C) + r_2^{{CDA}} * f(D) + r_3^{{CDA}} * f(A)')
+    else:
+        print('NaN')
+
+    print(f"r1_ABC: {r1_ABC}")
+    print(f"r2_ABC: {r2_ABC}")
+    print(f"r3_ABC: {r3_ABC}")
+    print(f"r1_CDA: {r1_CDA}")
+    print(f"r2_CDA: {r2_CDA}")
+    print(f"r3_CDA: {r3_CDA}")
+
+Can we also call the different sets of  r1_ABC, r2_ABC, r3_ABC, r1_CDA, r2_CDA and r3_CDA so they correspond to their set of y just like we did before with A B C D
+
+// I ask the AI to apply f to all A, B and C using the array given //
+
+import numpy as np
+import matplotlib.pyplot as plt
+
+# Generate random points
+rng = np.random.default_rng(2024)
+X = rng.uniform(size=(50, 2))
+
+# Define the function f
+f = lambda x: x[0] * x[1]
+F = np.array([f(x) for x in X])
+
+# Apply the function f to the set Y
+Y = [(0.2, 0.2), (0.8, 0.2), (0.8, 0.8), (0.8, 0.2), (0.5, 0.5)]
+F_Y = np.array([f(np.array(y)) for y in Y])
+
+print("F:", F)
+print("F_Y:", F_Y)
+
+# Euclidean distance function
+def euclidean_distance(x, y):
+    return np.sqrt((x[0] - y[0])**2 + (x[1] - y[1])**2)
+
+# Function to find the point that minimizes the Euclidean distance
+def find_min_distance_point(constraint_set, y):
+    if constraint_set.size > 0:
+        distances = np.linalg.norm(constraint_set - y, axis=1)
+        min_index = np.argmin(distances)
+        return constraint_set[min_index]
+    else:
+        return np.nan, np.nan
+
+# Iterate over each point in Y
+for y in Y:
+    y = np.array(y)
+    print(f"Calculations for y = {y}")
+
+    # Define the constraints
+    ConstraintA = np.array([x for x in X if x[0] > y[0] and x[1] > y[1]])
+    ConstraintB = np.array([x for x in X if x[0] > y[0] and x[1] < y[1]])
+    ConstraintC = np.array([x for x in X if x[0] < y[0] and x[1] < y[1]])
+    ConstraintD = np.array([x for x in X if x[0] < y[0] and x[1] > y[1]])
+
+    # Find points A, B, C, D
+    A = find_min_distance_point(ConstraintA, y)
+    B = find_min_distance_point(ConstraintB, y)
+    C = find_min_distance_point(ConstraintC, y)
+    D = find_min_distance_point(ConstraintD, y)
+
+    A_name = f"A({y[0]},{y[1]})"
+    B_name = f"B({y[0]},{y[1]})"
+    C_name = f"C({y[0]},{y[1]})"
+    D_name = f"D({y[0]},{y[1]})"
+
+    print(f"Point {A_name}: {A}")
+    print(f"Point {B_name}: {B}")
+    print(f"Point {C_name}: {C}")
+    print(f"Point {D_name}: {D}")
+
+    # Ensure A, B, and C are not NaN
+    if np.isnan(A).any() or np.isnan(B).any() or np.isnan(C).any():
+        print(f"One or more points {A_name}, {B_name}, or {C_name} are NaN for y = {y}. Cannot calculate barycentric coordinates.")
+        continue
+
+    # Calculate r1^ABC
+    numerator_1_ABC = (B[1] - C[1]) * (y[0] - C[0]) + (C[0] - B[0]) * (y[1] - C[1])
+    denominator_ABC = (B[1] - C[1]) * (A[0] - C[0]) + (C[0] - B[0]) * (A[1] - C[1])
+    r1_ABC = numerator_1_ABC / denominator_ABC
+
+    # Calculate r2^ABC
+    numerator_2_ABC = (C[1] - A[1]) * (y[0] - C[0]) + (A[0] - C[0]) * (y[1] - C[1])
+    r2_ABC = numerator_2_ABC / denominator_ABC
+
+    # Calculate r3^ABC
+    r3_ABC = 1 - r1_ABC - r2_ABC
+
+    # Calculate r1^CDA
+    numerator_1_CDA = (D[1] - A[1]) * (y[0] - A[0]) + (A[0] - D[0]) * (y[1] - A[1])
+    denominator_CDA = (D[1] - A[1]) * (C[0] - A[0]) + (A[0] - D[0]) * (C[1] - A[1])
+    r1_CDA = numerator_1_CDA / denominator_CDA
+
+    # Calculate r2^CDA
+    numerator_2_CDA = (A[1] - C[1]) * (y[0] - A[0]) + (C[0] - A[0]) * (y[1] - A[1])
+    r2_CDA = numerator_2_CDA / denominator_CDA
+
+    # Calculate r3^CDA
+    r3_CDA = 1 - r1_CDA - r2_CDA
+
+    r1_ABC_name = f"r1_ABC({y[0]},{y[1]})"
+    r2_ABC_name = f"r2_ABC({y[0]},{y[1]})"
+    r3_ABC_name = f"r3_ABC({y[0]},{y[1]})"
+    r1_CDA_name = f"r1_CDA({y[0]},{y[1]})"
+    r2_CDA_name = f"r2_CDA({y[0]},{y[1]})"
+    r3_CDA_name = f"r3_CDA({y[0]},{y[1]})"
+
+    if 0 <= r1_ABC <= 1 and 0 <= r2_ABC <= 1 and 0 <= r3_ABC <= 1:
+        print(f'y is located in triangle ABC and r_1^{{ABC}} * f(A) + r_2^{{ABC}} * f(B) + r_3^{{ABC}} * f(C)')
+    else:
+        print('NaN')
+    if 0 <= r1_CDA <= 1 and 0 <= r2_CDA <= 1 and 0 <= r3_CDA <= 1:
+        print(f'y is located in triangle CDA and r_1^{{CDA}} * f(C) + r_2^{{CDA}} * f(D) + r_3^{{CDA}} * f(A)')
+    else:
+        print('NaN')
+
+    print(f"{r1_ABC_name}: {r1_ABC}")
+    print(f"{r2_ABC_name}: {r2_ABC}")
+    print(f"{r3_ABC_name}: {r3_ABC}")
+    print(f"{r1_CDA_name}: {r1_CDA}")
+    print(f"{r2_CDA_name}: {r2_CDA}")
+    print(f"{r3_CDA_name}: {r3_CDA}")
+
+    # Calculate f(A), f(B), f(C), f(y) using function f
+    f_A = f(A)
+    f_B = f(B)
+    f_C = f(C)
+    f_y = f(y)
+
+    # Calculate y_f using barycentric coordinates
+    y_f = r1_ABC * f_A + r2_ABC * f_B + r3_ABC * f_C
+    print(f"f(A) = {f_A:.4f}")
+    print(f"f(B) = {f_B:.4f}")
+    print(f"f(C) = {f_C:.4f}")
+    print(f"f(y) = {f_y:.4f} = {r1_ABC:.4f} * f(A) + {r2_ABC:.4f} * f(B) + {r3_ABC:.4f} * f(C) for y = {y}")
+
+    # Calculate F for y
+    F_y = f(y)
+    print(f"F(y) = {F_y:.4f} for y = {y}")
+    print("\n")
+
+    # Plot the points and the triangles
+    plt.figure(figsize=(10, 8))
+    plt.scatter(X[:, 0], X[:, 1], color='gray', label='Points in X')
+    plt.scatter(y[0], y[1], color='red', label='Point y', zorder=5)
+    plt.scatter([A[0], B[0], C[0], D[0]], [A[1], B[1], C[1], D[1]], color=['blue', 'green', 'purple', 'orange'], label=f'Points {A_name}, {B_name}, {C_name}, {D_name}', zorder=5)
+
+    plt.plot([A[0], B[0]], [A[1], B[1]], 'b-')
+    plt.plot([B[0], C[0]], [B[1], C[1]], 'b-')
+    plt.plot([C[0], A[0]], [C[1], A[1]], 'b-', label='Triangle ABC')
+
+    plt.plot([C[0], D[0]], [C[1], D[1]], 'r-')
+    plt.plot([D[0], A[0]], [D[1], A[1]], 'r-')
+    plt.plot([A[0], C[0]], [A[1], C[1]], 'r-', label='Triangle CDA')
+
+    plt.legend()
+    plt.xlabel('X1')
+    plt.ylabel('X2')
+    plt.title(f'Points and Triangles for y = {y}')
+    plt.grid(True)
+    plt.show()
+
+
